@@ -1,8 +1,8 @@
 # GitHub readiness
 
-Prepared repository: **MAlazmii/heat-mpi** .
+Repository: **MAlazmii/heat-mpi**.
 Description: Reproducible C/MPI heat-diffusion solver with analytical validation and benchmark provenance.
-Visibility: **private**, created and uploaded with owner authorization on 6 November 2026.
+License: [MIT](../LICENSE). Public release authorized by the owner on 6 November 2026.
 
 ## Prepared contents
 
@@ -24,8 +24,10 @@ static review.
 ## Linux execution status
 
 Both MPI implementations have passed native Linux numerical tests, serial sanitizers
-and benchmark reproduction. Exact tested revisions and run links are recorded in
-[validation](validation.md) and `results/linux-validation-summary.json`. Downloaded
+and benchmark reproduction. Test scope and source fingerprints are recorded in
+[validation](validation.md) and `results/linux-validation-summary.json`.
+The [Actions page](https://github.com/MAlazmii/heat-mpi/actions/workflows/ci.yml)
+provides the checks and artifacts for each uploaded revision. Downloaded
 logs and raw results are preserved locally under ignored `results/ci/` directories.
 
 Ubuntu 24.04's MPICH 4.2.0-5build3 initially reproduced a documented distribution
@@ -40,12 +42,12 @@ No numerical tolerances were relaxed and no failing tests were disabled.
 Included Actions capacity was verified before launch. No billing settings, paid
 runner options, spending limits or subscriptions were changed.
 
-## Remaining public-release gates
+## Release requirements
 
-1. Choose a public license. No license is silently selected by this preparation.
-2. Review public contents and authorize public visibility separately.
-3. Tag a release only after required checks pass. No multi-node performance claim
-   follows from GitHub's single-host runners.
+The owner selected MIT and authorized public visibility. Publication requires a
+reviewed source tree, private commit email addresses and successful checks for the
+exact release revision. Tagged versions should meet the same requirements.
+No multi-node performance claim follows from GitHub’s single-host runners.
 
 Local preflight: all seven test methods passed; the revised benchmark completed
 three repeats for each of serial and 1/2/4 MPI ranks. Source/executable fingerprints

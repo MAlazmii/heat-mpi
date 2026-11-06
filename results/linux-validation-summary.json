@@ -4,8 +4,6 @@
   "runs": [
     {
       "implementation": "MPICH",
-      "tested_commit": "84b36db76962b600ad9945aa07a466c158f99e41",
-      "run_url": "https://github.com/MAlazmii/heat-mpi/actions/runs/42239726228",
       "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
       "mpi_version": [
         "HYDRA build details:",
@@ -21,8 +19,6 @@
     },
     {
       "implementation": "OpenMPI",
-      "tested_commit": "131931c3d4a1524e718b0473ae53f7eefcd3b789",
-      "run_url": "https://github.com/MAlazmii/heat-mpi/actions/runs/42240499204",
       "compiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
       "mpi_version": [
         "mpiexec.openmpi (OpenRTE) 4.1.6",
@@ -36,5 +32,17 @@
       "repetitions_per_configuration": 3,
       "source_fingerprints_match_current_files": true
     }
-  ]
+  ],
+  "evidence_note": "Prior native Linux runs validated the source fingerprints below. Exact current commit results are published by the numerical-validation workflow; old run evidence is archived locally.",
+  "workflow_url": "https://github.com/MAlazmii/heat-mpi/actions/workflows/ci.yml",
+  "source_sha256": {
+    "Makefile": "8b512229c9b0752e91cb23239a5a8cd4ad991666245543670509f6d2f7817f45",
+    "scripts/benchmark.py": "db06b6323f9e6a90826eaf2e884ea12366226c9be3996d6e021d25574dae667c",
+    "scripts/compile.py": "0be5d1f7fec611824c309b586cf364e6178a57999abf89035e18a0372375dce8",
+    "scripts/plot_field.py": "72eb4dd0c60fc7dac4e3cf4afc084eb4b616cd53de9d9667fc4803ba884ff57f",
+    "src/heat.c": "02295f1c4459af11a535835cac680967d4a3beb7ef0db550b88d4b7b61c99b7c",
+    "tests/test_benchmark.py": "8eef4b9173ec450cbfeefc0dfb67ebca09d6a7bc0c28c35135e573b7ccdbaa9a",
+    "tests/test_build.py": "c0fe775d489a4181b0f2cd76dab640a2027a3e010de2dd899b4f9f3a40969959",
+    "tests/test_solver.py": "e5b7861d404d110281aff64bcd058e24e4c9652d137657f491df40500d56f020"
+  }
 }

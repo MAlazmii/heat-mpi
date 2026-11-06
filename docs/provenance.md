@@ -9,6 +9,7 @@ project directory; recovered EIDF/Cirrus/ARCHER2 and Blackboard archives are unt
 
 C standard-library facilities and an installed MPI runtime are external dependencies.
 Python tests and benchmark tooling use the standard library. The workflow references
-GitHub's checkout action at a fixed revision. No data assets or third-party source
-are bundled. An owner-selected license and exact-content review remain prerequisites
-for public release.
+GitHub's checkout and artifact-upload actions at fixed revisions. No data assets or third-party source
+are bundled. The project is licensed under the [MIT License](../LICENSE), selected
+by the owner on 6 November 2026. This license covers the project files, not the
+separate university archives or external dependencies.

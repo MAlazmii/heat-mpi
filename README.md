@@ -6,14 +6,15 @@ A serial reference and a distributed row-decomposed solver evolve the same
 2-D heat equation. Analytical checks, independent small-grid expectations and
 complete-field comparisons make numerical correctness visible before performance.
 
-Status: private development repository with passing Linux validation for Open MPI
-and MPICH. See [validation](docs/validation.md) for tested revisions and scope.
+An educational HPC project with passing Linux validation for Open MPI and MPICH.
+See [validation](docs/validation.md) for evidence and scope.
 Multi-node performance remains unverified.
 
 ## Quick start
 
 Requires a C11 compiler, an MPI implementation, Make and Python 3.10+.
-This Mac needs the documented [local compiler workaround](docs/local-environment.md).
+For the author’s mixed-architecture Mac setup, see the
+[local compiler workaround](docs/local-environment.md).
 On Ubuntu: `sudo apt-get install build-essential openmpi-bin libopenmpi-dev python3 file`.
 
 ```sh
@@ -85,8 +86,7 @@ This project is a new implementation from the mathematical specification in
 `docs/numerics.md`. It contains no copied assessment source, submissions, lecture
 slides or recovered cluster files. See [provenance](docs/provenance.md).
 
-No public license has been selected yet. Dependencies retain their own licenses.
-Publication and a tagged release follow review of the exact contents and evidence.
+Licensed under the [MIT License](LICENSE). Dependencies retain their own licenses.
 
 Near-term extensions are driven by measurements: communication/computation
 breakdown, then overlap or 2-D decomposition if justified. GPU support, weak-scaling

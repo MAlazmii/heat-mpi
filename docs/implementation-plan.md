@@ -40,4 +40,7 @@ Timing: max rank loop duration; exclude initialization/output; no local-to-clust
 Compiler environment required explicit native Apple clang cross-targeting x86_64; see local-environment.md.
 Local MPI launch required socket access. No global compiler changes were made.
 Review found two benchmark-provenance defects; build manifests and saved full test logs resolve them.
-Remote CI, publication/license selection and native cluster performance are deliberately pending.
+Native Linux validation passed for Open MPI and MPICH, including all seven test
+methods, serial sanitizers and benchmark reproduction. The owner selected MIT and
+authorized publication on 6 November 2026. Native cluster performance remains
+unmeasured. Current revision checks are available on the repository’s Actions page.
