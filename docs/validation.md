@@ -15,7 +15,7 @@ Date: 6 November 2026. Source and executable hashes are stored with local result
 | Benchmark reproducibility | Local evidence | Raw repetitions, build manifests, input/source/binary hashes, full test log; translated execution |
 | Multi-node / native cluster performance | NOT RUN | No cluster performance claims |
 | Clean rebuild | PASS locally | Separate temporary copy rebuilt and all six test methods plus sanitizer smoke checks passed; results/clean-build-validation.txt |
-| Remote Linux workflow | NOT RUN | Workflow prepared; not pushed or observed on GitHub |
+| Remote Linux workflow | NOT RUN | Open MPI + MPICH matrix prepared; execution pending private upload approval |
 | Public license and release | PENDING | Owner license choice, public-content review and verified release CI required |
 
 The static independent review found no blocking stencil, halo, decomposition or
@@ -25,8 +25,13 @@ This is a development candidate, not a certified production or research result.
 
 Full suite: `python3 -m unittest discover -s tests -v`. It uses subprocess timeouts
 and fails on missing MPI executables or blocked launches rather than silently skipping.
-The six test methods contain multiple configurations, not just six solver runs.
+The seven test methods contain multiple configurations, including benchmark failure diagnostics.
 
 No numerical test guarantees correctness for every allowed grid/step combination.
 The 10-million-cell cap is a safety bound, not a verified performance envelope.
 Local AddressSanitizer coverage does not claim instrumented MPI-library coverage.
+
+GitHub-preparation review: expanded Ubuntu coverage to Open MPI and MPICH, with
+always-uploaded logs/manifests. A failing-command regression test reproduced lost
+benchmark diagnostics and passed after correction. Benchmark snapshots now retain
+partial samples with status incomplete; only a finished run is marked complete.

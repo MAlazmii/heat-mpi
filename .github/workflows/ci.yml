@@ -1,13 +1,67 @@
 name: numerical-validation
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   validate:
+    name: Ubuntu / ${{ matrix.mpi }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mpi: OpenMPI
+            packages: openmpi-bin libopenmpi-dev
+            compiler: mpicc.openmpi
+            launcher: mpiexec.openmpi
+          - mpi: MPICH
+            packages: mpich libmpich-dev
+            compiler: mpicc.mpich
+            launcher: mpiexec.mpich
+    env:
+      MPIEXEC: ${{ matrix.launcher }}
+      OMPI_MCA_rmaps_base_oversubscribe: '1'
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - run: sudo apt-get update && sudo apt-get install -y openmpi-bin libopenmpi-dev
-      - run: make CC=mpicc test
-      - run: make CC=gcc sanitize
+      - name: Install native toolchain
+        run: sudo apt-get update && sudo apt-get install -y build-essential python3 file ${{ matrix.packages }}
+      - name: Record environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p results/ci
+          { uname -a; lscpu; python3 --version; ${{ matrix.compiler }} --version; ${{ matrix.launcher }} --version; } > results/ci/environment.txt
+          git rev-parse HEAD > results/ci/commit.txt
+      - name: Clean build and numerical integration tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          make clean
+          make CC=${{ matrix.compiler }} MPICC=${{ matrix.compiler }} test 2>&1 | tee results/ci/tests.txt
+      - name: Serial address and undefined-behavior sanitizers
+        shell: bash
+        run: |
+          set -euo pipefail
+          make CC=gcc sanitize 2>&1 | tee results/ci/sanitizers.txt
+      - name: Exercise reproducible benchmark pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/benchmark.py results/ci/benchmark --repeats 3 2>&1 | tee results/ci/benchmark-driver.txt
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: validation-${{ matrix.mpi }}-${{ github.sha }}
+          path: |
+            results/ci/
+            build/*.json
+          retention-days: 14
+          if-no-files-found: warn

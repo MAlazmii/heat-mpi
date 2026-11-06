@@ -13,7 +13,7 @@ what has actually run. Remote CI and multi-node performance remain unverified.
 
 Requires a C11 compiler, an MPI implementation, Make and Python 3.10+.
 This Mac needs the documented [local compiler workaround](docs/local-environment.md).
-On Ubuntu: `sudo apt-get install build-essential openmpi-bin libopenmpi-dev python3`.
+On Ubuntu: `sudo apt-get install build-essential openmpi-bin libopenmpi-dev python3 file`.
 
 ```sh
 make CC=mpicc
@@ -64,11 +64,19 @@ repeats for serial and 1/2/4 MPI ranks at fixed 256×256 cells and 200 steps. Th
 results directory contains commands, raw samples, compiler/MPI metadata and source
 and executable hashes. Timing includes halo exchange and stencil updates; output,
 initialization and validation are outside the timed region. Min/median/max expose
-variation. These are local measurements, not evidence of multi-node scaling.
+variation. Progress is saved after each repetition; interrupted results remain
+labelled `incomplete`. These are local measurements, not evidence of multi-node scaling.
 
 For a fair comparison use the same compiler/architecture/flags for both binaries
 (`CC=mpicc`). Rebuild after changing flags: `make clean && make CC=mpicc`.
 The current Makefile does not fingerprint command-line build-variable changes.
+
+## Linux validation and contribution
+
+The Ubuntu workflow targets both Open MPI and MPICH. Each job builds from scratch,
+runs the numerical suite and serial sanitizers, exercises benchmark reproduction,
+and saves logs tied to the tested commit. See [GitHub readiness](docs/github-readiness.md)
+for the current execution status and [contribution guidance](CONTRIBUTING.md).
 
 ## Scope and ownership
 

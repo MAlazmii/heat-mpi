@@ -1,0 +1,16 @@
+test_records_real_compiler_and_artifact (test_build.BuildManifestTests.test_records_real_compiler_and_artifact) ... ok
+test_continuum_convergence (test_solver.SolverTests.test_continuum_convergence) ... ok
+test_discrete_sine_eigenmode (test_solver.SolverTests.test_discrete_sine_eigenmode) ... ok
+test_impulse_reference_and_small_slabs (test_solver.SolverTests.test_impulse_reference_and_small_slabs) ... ok
+test_output_failure_and_collision (test_solver.SolverTests.test_output_failure_and_collision) ... ok
+test_reject_invalid_inputs (test_solver.SolverTests.test_reject_invalid_inputs) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 21.799s
+
+OK
+cc -O1 -g -std=c11 -Wall -Wextra -Werror -fsanitize=address,undefined -fno-omit-frame-pointer src/heat.c -o build/heat_sanitize -lm
+./build/heat_sanitize 7 5 20 impulse
+{"nx":7,"ny":5,"steps":20,"ranks":1,"dt":0.002,"seconds":8.000002708286047e-06,"continuum_linf":null}
+./build/heat_sanitize 1 1 0 sine
+{"nx":1,"ny":1,"steps":0,"ranks":1,"dt":0.025000000000000001,"seconds":0,"continuum_linf":0}

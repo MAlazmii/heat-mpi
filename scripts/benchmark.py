@@ -18,8 +18,14 @@ import time
 ROOT=Path(__file__).resolve().parents[1]
 
 def run(cmd):
-    return subprocess.run(cmd,cwd=ROOT,check=True,capture_output=True,text=True,timeout=120,
-        env=dict(os.environ,OMPI_MCA_rmaps_base_oversubscribe='1')).stdout
+    try:
+        return subprocess.run(cmd,cwd=ROOT,check=True,capture_output=True,text=True,timeout=120,
+            env=dict(os.environ,OMPI_MCA_rmaps_base_oversubscribe='1')).stdout
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+        for output in (error.stdout, error.stderr):
+            if output:
+                print(output.decode(errors='replace') if isinstance(output,bytes) else output,file=sys.stderr)
+        raise
 
 def main():
     parser=argparse.ArgumentParser()
@@ -27,9 +33,11 @@ def main():
     parser.add_argument('--repeats',type=int,default=5)
     args=parser.parse_args()
     if args.repeats<3: parser.error('at least three repetitions required')
-    # Validation is mandatory and failures prevent creation of benchmark evidence.
-    validation=subprocess.run([sys.executable,'-m','unittest','discover','-s','tests','-v'],cwd=ROOT,check=True,capture_output=True,text=True,timeout=180,env=dict(os.environ,OMPI_MCA_rmaps_base_oversubscribe='1'))
     args.output.mkdir(parents=True,exist_ok=False)
+    # Validation is mandatory and failures prevent creation of benchmark evidence.
+    validation=subprocess.run([sys.executable,'-m','unittest','discover','-s','tests','-v'],cwd=ROOT,check=False,capture_output=True,text=True,timeout=180,env=dict(os.environ,OMPI_MCA_rmaps_base_oversubscribe='1'))
+    (args.output/'validation.txt').write_text(validation.stdout+validation.stderr)
+    validation.check_returncode()
     files=[p for directory in ('src','tests','scripts') for p in (ROOT/directory).rglob('*') if p.is_file() and '__pycache__' not in p.parts]
     files += [ROOT/'Makefile', ROOT/'build/heat_serial', ROOT/'build/heat_mpi']
     builds={}
@@ -53,6 +61,11 @@ def main():
         'scope':'local single machine; not multi-node scaling',
         'sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}}
     records=[]
+    def checkpoint(status):
+        temporary=args.output/'benchmark.tmp'
+        temporary.write_text(json.dumps({'status':status,'metadata':metadata,'results':records},indent=2)+'\n')
+        temporary.replace(args.output/'benchmark.json')
+    checkpoint('incomplete')
     for ranks in (0,1,2,4):
         cmd=(shlex.split(os.environ.get('MPIEXEC','mpiexec'))+['-n',str(ranks)] if ranks else [])+[str(ROOT/'build'/('heat_mpi' if ranks else 'heat_serial')),'256','256','200','sine']
         # Validate the exact measured workload against the discrete sine eigenmode.
@@ -65,14 +78,17 @@ def main():
             if len(errors)!=256*256 or max(errors)>1e-12: raise ValueError('benchmark workload validation failed')
         run(cmd) # separate untimed warm-up run
         samples=[]
+        record={'backend':'mpi' if ranks else 'serial','ranks':ranks or 1,'samples':samples}
+        records.append(record)
+        checkpoint('incomplete')
         for repeat in range(args.repeats):
             sample=json.loads(run(cmd)); sample.update(repeat=repeat,command=cmd)
             samples.append(sample)
+            checkpoint('incomplete')
         times=[s['seconds'] for s in samples]
-        records.append({'backend':'mpi' if ranks else 'serial','ranks':ranks or 1,'samples':samples,
-                        'median_seconds':statistics.median(times),'min_seconds':min(times),'max_seconds':max(times)})
-    (args.output/'validation.txt').write_text(validation.stdout+validation.stderr)
-    (args.output/'benchmark.json').write_text(json.dumps({'metadata':metadata,'results':records},indent=2)+'\n')
+        record.update(median_seconds=statistics.median(times),min_seconds=min(times),max_seconds=max(times))
+        checkpoint('incomplete')
+    checkpoint('complete')
     print(args.output/'benchmark.json')
 
 if __name__=='__main__': main()
