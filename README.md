@@ -6,8 +6,9 @@ A serial reference and a distributed row-decomposed solver evolve the same
 2-D heat equation. Analytical checks, independent small-grid expectations and
 complete-field comparisons make numerical correctness visible before performance.
 
-Status: local development candidate. See [validation](docs/validation.md) for
-what has actually run. Remote CI and multi-node performance remain unverified.
+Status: private development repository with passing Linux validation for Open MPI
+and MPICH. See [validation](docs/validation.md) for tested revisions and scope.
+Multi-node performance remains unverified.
 
 ## Quick start
 

@@ -23,10 +23,15 @@ static review.
 
 ## Linux execution status
 
-The first Linux run passed Open MPI completely. Ubuntu 24.04's MPICH 4.2.0-5build3
-reproduced a documented distribution packaging defect: launched processes each saw
-rank zero in a one-process communicator. Tests rejected it. The MPICH job now uses
-Ubuntu 26.04's newer distribution package; validation of that revision is in progress.
+Both MPI implementations have passed native Linux numerical tests, serial sanitizers
+and benchmark reproduction. Exact tested revisions and run links are recorded in
+[validation](validation.md) and `results/linux-validation-summary.json`. Downloaded
+logs and raw results are preserved locally under ignored `results/ci/` directories.
+
+Ubuntu 24.04's MPICH 4.2.0-5build3 initially reproduced a documented distribution
+packaging defect: launched processes each saw rank zero in a one-process communicator.
+Tests rejected it. Ubuntu 26.04's MPICH 4.3.2 passed. Package download retries and
+timeouts are bounded to limit stalled runner time.
 
 References: [runner-image report](https://github.com/actions/runner-images/issues/13204),
 [Ubuntu package bug](https://bugs.launchpad.net/ubuntu/+source/mpich/+bug/2072338).
@@ -35,13 +40,11 @@ No numerical tolerances were relaxed and no failing tests were disabled.
 Included Actions capacity was verified before launch. No billing settings, paid
 runner options, spending limits or subscriptions were changed.
 
-## Release gates after the private test run
+## Remaining public-release gates
 
-1. Inspect both MPI jobs and artifacts for the exact pushed commit; fix failures and rerun.
-2. Record Linux results in docs/validation.md with run links and tested revision.
-3. Choose a public license. No license is silently selected by this preparation.
-4. Review public contents and authorize public visibility separately.
-5. Tag a release only after required checks pass. No multi-node performance claim
+1. Choose a public license. No license is silently selected by this preparation.
+2. Review public contents and authorize public visibility separately.
+3. Tag a release only after required checks pass. No multi-node performance claim
    follows from GitHub's single-host runners.
 
 Local preflight: all seven test methods passed; the revised benchmark completed

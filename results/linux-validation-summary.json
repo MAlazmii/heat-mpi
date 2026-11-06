@@ -1,0 +1,40 @@
+{
+  "verified_on": "2026-11-06",
+  "scope": "single-host GitHub standard Linux runners; not cluster scaling",
+  "runs": [
+    {
+      "implementation": "MPICH",
+      "tested_commit": "84b36db76962b600ad9945aa07a466c158f99e41",
+      "run_url": "https://github.com/MAlazmii/heat-mpi/actions/runs/42239726228",
+      "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "mpi_version": [
+        "HYDRA build details:",
+        "    Version:                                 4.3.2",
+        "    Release Date:                            Mon Oct  6 11:14:20 AM CDT 2025"
+      ],
+      "integration_tests": "7 passed",
+      "sanitizers": "passed for documented serial cases",
+      "benchmark_status": "complete",
+      "benchmark_configurations": 4,
+      "repetitions_per_configuration": 3,
+      "source_fingerprints_match_current_files": true
+    },
+    {
+      "implementation": "OpenMPI",
+      "tested_commit": "131931c3d4a1524e718b0473ae53f7eefcd3b789",
+      "run_url": "https://github.com/MAlazmii/heat-mpi/actions/runs/42240499204",
+      "compiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+      "mpi_version": [
+        "mpiexec.openmpi (OpenRTE) 4.1.6",
+        "",
+        "Report bugs to http://www.open-mpi.org/community/help/"
+      ],
+      "integration_tests": "7 passed",
+      "sanitizers": "passed for documented serial cases",
+      "benchmark_status": "complete",
+      "benchmark_configurations": 4,
+      "repetitions_per_configuration": 3,
+      "source_fingerprints_match_current_files": true
+    }
+  ]
+}
