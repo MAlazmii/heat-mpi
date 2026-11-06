@@ -1,34 +1,39 @@
 # GitHub readiness
 
-Prepared repository: **MAlazmii/heat-mpi** (proposed name).
+Prepared repository: **MAlazmii/heat-mpi** .
 Description: Reproducible C/MPI heat-diffusion solver with analytical validation and benchmark provenance.
-Initial visibility: **private**, pending authorization to create/upload.
+Visibility: **private**, created and uploaded with owner authorization on 6 November 2026.
 
 ## Prepared contents
 
 - C11 serial/MPI source and independent numerical tests.
 - Build tooling and source/executable provenance records.
 - README, method specification, development guidance, validation limits and generated illustration.
-- Ubuntu 24.04 workflow for Open MPI and MPICH, strict warnings, complete integration
+- Ubuntu 24.04 / Open MPI and Ubuntu 26.04 / MPICH workflows, strict warnings, complete integration
   tests, serial AddressSanitizer/UBSan, and the benchmark pipeline.
 - Workflow logs/build manifests retained for 14 days, associated with the exact commit.
 - Pinned third-party Actions and read-only workflow repository permissions.
 
 Compiled binaries and local benchmark metadata are excluded. Original coursework,
 Blackboard materials and recovered supercomputer directories are outside this repository.
-The repository has no remote yet. The candidate files were scanned for common token/private-key patterns, personal
+Remote: https://github.com/MAlazmii/heat-mpi. The candidate files were scanned for common token/private-key patterns, personal
 absolute paths and student identifiers, with no matches. This bounded scan is not
 a universal secret-detection guarantee. CI configuration received an independent
 static review.
 
 ## Linux execution status
 
-NOT RUN. This Mac has no detected Docker/Podman/Lima/QEMU runtime. GitHub hosted
-runners are the selected route; GitHub authentication was verified with network
-access. Creation/upload of a private repository requires the owner's approval.
-Private Actions runs may consume the account's included minutes; do not enable paid
-overages or purchase runner capacity. Check account availability before launch.
-A workflow definition is not evidence of Linux success.
+The first Linux run passed Open MPI completely. Ubuntu 24.04's MPICH 4.2.0-5build3
+reproduced a documented distribution packaging defect: launched processes each saw
+rank zero in a one-process communicator. Tests rejected it. The MPICH job now uses
+Ubuntu 26.04's newer distribution package; validation of that revision is in progress.
+
+References: [runner-image report](https://github.com/actions/runner-images/issues/13204),
+[Ubuntu package bug](https://bugs.launchpad.net/ubuntu/+source/mpich/+bug/2072338).
+No numerical tolerances were relaxed and no failing tests were disabled.
+
+Included Actions capacity was verified before launch. No billing settings, paid
+runner options, spending limits or subscriptions were changed.
 
 ## Release gates after the private test run
 

@@ -1,5 +1,6 @@
 """Executable-level checks with mathematical and independent small-grid oracles."""
 import csv
+import json
 import math
 import os
 from pathlib import Path
@@ -21,6 +22,8 @@ class SolverTests(unittest.TestCase):
             cmd = ([*MPI, '-n', str(ranks)] if ranks else []) + [str(binary), str(nx), str(ny), str(steps), mode, str(output)]
             run = subprocess.run(cmd + (extra or []), text=True, capture_output=True, env=ENV, timeout=30)
             self.assertEqual(run.returncode, 0, run.stderr)
+            report=json.loads(run.stdout)
+            self.assertEqual(report['ranks'],ranks or 1, 'launcher did not form the requested communicator')
             with output.open() as f:
                 rows = list(csv.DictReader(f))
             return [float(row['u']) for row in rows]

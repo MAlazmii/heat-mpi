@@ -15,7 +15,7 @@ Date: 6 November 2026. Source and executable hashes are stored with local result
 | Benchmark reproducibility | Local evidence | Raw repetitions, build manifests, input/source/binary hashes, full test log; translated execution |
 | Multi-node / native cluster performance | NOT RUN | No cluster performance claims |
 | Clean rebuild | PASS locally | Separate temporary copy rebuilt and all six test methods plus sanitizer smoke checks passed; results/clean-build-validation.txt |
-| Remote Linux workflow | NOT RUN | Open MPI + MPICH matrix prepared; execution pending private upload approval |
+| Remote Linux workflow | NOT RUN | Open MPI passed initial run; MPICH package correction being verified |
 | Public license and release | PENDING | Owner license choice, public-content review and verified release CI required |
 
 The static independent review found no blocking stencil, halo, decomposition or

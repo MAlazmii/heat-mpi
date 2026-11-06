@@ -10,18 +10,20 @@ concurrency:
   cancel-in-progress: true
 jobs:
   validate:
-    name: Ubuntu / ${{ matrix.mpi }}
-    runs-on: ubuntu-24.04
+    name: ${{ matrix.os }} / ${{ matrix.mpi }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         include:
           - mpi: OpenMPI
+            os: ubuntu-24.04
             packages: openmpi-bin libopenmpi-dev
             compiler: mpicc.openmpi
             launcher: mpiexec.openmpi
           - mpi: MPICH
+            os: ubuntu-26.04
             packages: mpich libmpich-dev
             compiler: mpicc.mpich
             launcher: mpiexec.mpich
