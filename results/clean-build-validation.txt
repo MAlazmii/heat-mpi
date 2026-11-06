@@ -1,0 +1,22 @@
+COMMAND: ['make', 'CC=/Library/Developer/CommandLineTools/usr/bin/clang -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk', 'MPICC=/Library/Developer/CommandLineTools/usr/bin/clang -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/Cellar/open-mpi/5.0.6/include -L/usr/local/Cellar/open-mpi/5.0.6/lib -lmpi', 'all']
+mkdir -p build
+python3 scripts/compile.py build/heat_serial /Library/Developer/CommandLineTools/usr/bin/clang -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -O3 -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror src/heat.c -o build/heat_serial -lm
+python3 scripts/compile.py build/heat_mpi /Library/Developer/CommandLineTools/usr/bin/clang -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/Cellar/open-mpi/5.0.6/include -L/usr/local/Cellar/open-mpi/5.0.6/lib -lmpi -O3 -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -DUSE_MPI src/heat.c -o build/heat_mpi -lm
+COMMAND: ['python3', '-m', 'unittest', 'discover', '-s', 'tests', '-v']
+test_records_real_compiler_and_artifact (test_build.BuildManifestTests.test_records_real_compiler_and_artifact) ... ok
+test_continuum_convergence (test_solver.SolverTests.test_continuum_convergence) ... ok
+test_discrete_sine_eigenmode (test_solver.SolverTests.test_discrete_sine_eigenmode) ... ok
+test_impulse_reference_and_small_slabs (test_solver.SolverTests.test_impulse_reference_and_small_slabs) ... ok
+test_output_failure_and_collision (test_solver.SolverTests.test_output_failure_and_collision) ... ok
+test_reject_invalid_inputs (test_solver.SolverTests.test_reject_invalid_inputs) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 18.273s
+
+OK
+COMMAND: ['make', 'sanitize']
+cc -O1 -g -std=c11 -Wall -Wextra -Werror -fsanitize=address,undefined -fno-omit-frame-pointer src/heat.c -o build/heat_sanitize -lm
+./build/heat_sanitize 7 5 20 impulse
+{"nx":7,"ny":5,"steps":20,"ranks":1,"dt":0.002,"seconds":6.9999950937926769e-06,"continuum_linf":null}
+./build/heat_sanitize 1 1 0 sine
+{"nx":1,"ny":1,"steps":0,"ranks":1,"dt":0.025000000000000001,"seconds":0,"continuum_linf":0}
