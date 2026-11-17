@@ -41,8 +41,10 @@ partial samples with status incomplete; only a finished run is marked complete.
 Open MPI on Ubuntu 24.04 and MPICH on Ubuntu 26.04 each passed all seven test
 methods, serial AddressSanitizer/UBSan checks, and the exact benchmark workload
 validation plus three repeated timings for each of four configurations.
-The recorded source, tests, scripts and Makefile fingerprints match this implementation.
-Commit-email privacy changes and license/documentation edits do not alter those files.
+The source, tests, scripts and Makefile fingerprints identify the files used in
+those runs. Later fixes made the grid-size check overflow-safe and made chart
+creation refuse an existing destination atomically. The recorded timings and
+checks remain tied to the historical revision.
 
 Use the [numerical-validation workflow](https://github.com/MAlazmii/heat-mpi/actions/workflows/ci.yml)
 to inspect the result for a particular commit. A green result applies to the commit
@@ -57,3 +59,22 @@ broken package is supported. Numerical tolerances were not relaxed.
 Machine-readable evidence: `results/linux-validation-summary.json`. Full downloaded
 artifacts are retained locally under `results/ci/`; GitHub retains each for 14 days.
 No paid usage, subscription, spending-limit increase or premium runner was enabled.
+
+## Local review on 17 November 2026
+
+After the grid-size and chart-output fixes, strict serial/MPI builds and all seven
+test methods passed with Open MPI 5.0.6. Both executables were x86_64 builds running
+under translation on Apple M1. Native ARM64 serial AddressSanitizer/UBSan checks
+passed for the two documented cases. The benchmark pipeline completed three
+repetitions for serial and each of 1/2/4 MPI ranks.
+
+Four serial workloads, including the illustrated 63-by-47 grid after 2,000 steps,
+produced byte-identical CSV fields before and after the grid-size fix. The limit
+formula agreed with exact integer multiplication for one million sampled dimension
+pairs, including a product that wraps below the cap in 32-bit arithmetic. Native
+32-bit execution remains unverified.
+
+With Matplotlib 3.11.0 and Pillow 13.0.0 in a clean Python 3.11 environment, chart
+creation passed new-file, existing-file, symlink, dangling-symlink and suffixless-path
+checks. An unsupported format failed without creating an output file. These local
+checks supplement the commit-specific Linux workflow results.

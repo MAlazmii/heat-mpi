@@ -36,8 +36,9 @@ impulse; it is not a general pass/fail correctness certificate.
 
 ![Actual serial heat-diffusion output](docs/images/diffusion.png)
 
-Recreate this illustration with `python3 scripts/plot_field.py NEW.png` (optional
-Matplotlib dependency). Both panels use the same temperature scale.
+Install the optional plotting dependencies with `python3 -m pip install -r requirements-plot.txt`
+(Python 3.11+) and recreate this illustration with `python3 scripts/plot_field.py NEW.png`.
+Both panels use the same temperature scale.
 
 ## How it works
 

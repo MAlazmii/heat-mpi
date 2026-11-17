@@ -3,6 +3,7 @@
 Optional dependency: matplotlib. Usage: python3 scripts/plot_field.py NEW.png
 """
 import csv
+from io import BytesIO
 from pathlib import Path
 import subprocess
 import sys
@@ -14,6 +15,9 @@ import matplotlib.pyplot as plt
 ROOT=Path(__file__).resolve().parents[1]
 def main():
     output=Path(sys.argv[1])
+    image_format=output.suffix.lstrip('.') or matplotlib.rcParams['savefig.format']
+    if not output.suffix:
+        output=output.with_name(f"{output.name.rstrip('.')}.{image_format}")
     if output.exists(): raise FileExistsError(output)
     fig,axes=plt.subplots(1,2,figsize=(9,3.8),layout='constrained')
     with tempfile.TemporaryDirectory() as tmp:
@@ -26,6 +30,9 @@ def main():
             ax.set(title=title,xlabel='x',ylabel='y')
         fig.colorbar(im,ax=axes,label='Temperature (dimensionless)',shrink=.85)
         fig.suptitle('Heat diffusion · fixed zero-temperature boundaries')
-        fig.savefig(output,dpi=160)
+        with BytesIO() as image:
+            fig.savefig(image,format=image_format,dpi=160)
+            with output.open('xb') as destination:
+                destination.write(image.getbuffer())
     plt.close(fig)
 if __name__=='__main__': main()

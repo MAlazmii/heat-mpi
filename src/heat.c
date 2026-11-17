@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     if (argc < 5 || argc > 6) fail("usage: heat NX NY STEPS sine|impulse [new-field.csv|-]");
     int nx = number(argv[1], 1, 100000), ny = number(argv[2], 1, 100000);
     int steps = number(argv[3], 0, 100000000);
-    if ((size_t)nx * (size_t)ny > 10000000) fail("grid exceeds 10 million interior cells");
+    if ((size_t)nx > 10000000u / (size_t)ny) fail("grid exceeds 10 million interior cells");
     if (size > ny) fail("rank count must not exceed NY");
     int sine = strcmp(argv[4], "sine") == 0;
     if (!sine && strcmp(argv[4], "impulse") != 0) fail("initial condition must be sine or impulse");

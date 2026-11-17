@@ -70,6 +70,11 @@ class SolverTests(unittest.TestCase):
                 cmd=([*MPI,'-n',str(ranks)] if ranks else [])+[str(binary),*args]
                 run=subprocess.run(cmd,capture_output=True,env=ENV,timeout=20)
                 self.assertNotEqual(run.returncode,0,args)
+            # This product would wrap below the cap with 32-bit size_t.
+            cmd=([*MPI,'-n',str(ranks)] if ranks else [])+[str(binary),'100000','42950','0','sine']
+            run=subprocess.run(cmd,capture_output=True,env=ENV,timeout=20)
+            self.assertNotEqual(run.returncode,0)
+            self.assertIn(b'grid exceeds 10 million interior cells',run.stderr)
         run=subprocess.run([*MPI,'-n','2',str(ROOT/'build/heat_mpi'),'2','1','1','sine'],capture_output=True,env=ENV,timeout=20)
         self.assertNotEqual(run.returncode,0)
 
