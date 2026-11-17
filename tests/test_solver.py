@@ -69,14 +69,18 @@ class SolverTests(unittest.TestCase):
             for args in (['0','4','1','sine'], ['-1','4','1','sine'], ['2junk','4','1','sine'], ['2','4','-1','sine'], ['2','4','1','bad'], ['999999999999999999999','4','1','sine'], ['100000','100000','1','sine'], ['2','4','1','sine','-','extra']):
                 cmd=([*MPI,'-n',str(ranks)] if ranks else [])+[str(binary),*args]
                 run=subprocess.run(cmd,capture_output=True,env=ENV,timeout=20)
-                self.assertNotEqual(run.returncode,0,args)
+                self.assertNotEqual(run.returncode,0,f'{cmd!r} returned {run.returncode}')
             # This product would wrap below the cap with 32-bit size_t.
+            # MPI aborts may interrupt launcher stderr forwarding.
             cmd=([*MPI,'-n',str(ranks)] if ranks else [])+[str(binary),'100000','42950','0','sine']
             run=subprocess.run(cmd,capture_output=True,env=ENV,timeout=20)
-            self.assertNotEqual(run.returncode,0)
-            self.assertIn(b'grid exceeds 10 million interior cells',run.stderr)
-        run=subprocess.run([*MPI,'-n','2',str(ROOT/'build/heat_mpi'),'2','1','1','sine'],capture_output=True,env=ENV,timeout=20)
-        self.assertNotEqual(run.returncode,0)
+            self.assertNotEqual(run.returncode,0,f'{cmd!r} returned {run.returncode}')
+            if ranks == 0:
+                self.assertIn(b'grid exceeds 10 million interior cells',run.stderr,
+                              f'{cmd!r} returned {run.returncode}')
+        cmd=[*MPI,'-n','2',str(ROOT/'build/heat_mpi'),'2','1','1','sine']
+        run=subprocess.run(cmd,capture_output=True,env=ENV,timeout=20)
+        self.assertNotEqual(run.returncode,0,f'{cmd!r} returned {run.returncode}')
 
     def test_output_failure_and_collision(self):
         for ranks in (0,2):
